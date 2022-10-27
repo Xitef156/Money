@@ -10,14 +10,14 @@ const sleep = (ms) => {
     })
 }
 
-const Webhook_URL = "https://discord.com/api/webhooks/1033417167049347204/LSlbtI04j0fIUVRZ9j00Kc3uQ3DQcU6gkLXSynu5XT6r8OYkNNylBi8PbH2I9WtTZYpW"
+const Webhook_URL = process.env.Webhook
 const Colour = "#00ff0a"
 const Default_Speed = 1
 const Hidden = true
 var Instances = [
     {
-        "Mail": "alexiswiiu@gmail.com",
-        "Password": "bellot99"
+        "Mail": process.env.Mail,
+        "Password": process.env.Password
     }
 ]
 const First_Video = "https://loot.tv/video/671725"
