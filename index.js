@@ -1,6 +1,7 @@
 const moment = require('moment')
 const puppeteer = require('puppeteer')
 const Discord = require('discord.js')
+const path = require('path')
 const sleep = (ms) => {
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -38,16 +39,23 @@ var Reward
 var Active = 0;
 var Earn = []
 var Speed = (Default_Speed || 1)
+async function Typing(el,text = ""){
+    for(var i = 0;i<text;i++){
+        var letter = text.charAt(i)
+        await el.type(letter)
+        await sleep(200)
+    }
+}
 async function Try_Login(page,Mail,Password) {
     return new Promise(async (resolve) => {
         async function Restart() {
             try {
                 await sleep(3000)
         await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormFields__1zE8S > div:nth-child(1) > input[type=email]")
-        .then(el => el.type(Mail))
+        .then(el => Typing(el,Mail))
         await sleep(2000)
         await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormFields__1zE8S > div:nth-child(2) > input[type=password]")
-        .then(el => el.type(Password))
+        .then(el => Typing(el,Password))
         await sleep(2000)
         await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormButtonWrapper__9nGTl > button")
         .then(el => el.click())
@@ -103,7 +111,7 @@ return new Promise(async (resolve) => {
     if(Password == ('' || null || undefined)) return console.log(`Fail Password Instance : ${N}`)
     if(Webhook == ('' || null || undefined) || !String(Webhook).startsWith("https")) return console.log(`Fail Webhook Instance : ${N}`)
     const LootTv = new Discord.WebhookClient({url: Webhook})
-    var options = {headless: true, defaultViewport: {width:1920,height:1080}, executablePath: "./Chrome/chrome.exe", args: ['--no-sandbox']}
+    var options = {headless: true, defaultViewport: {width:1920,height:1080},executablePath:path.resolve(__dirname,'../node_modules/puppeteer/.local-chromium/linux-650583/chrome-linux/chrome'), args: ['--no-sandbox']}
     if(Hidden == false) options.headless = false
     const browser = await puppeteer.launch(options);
     await sleep(1000)
@@ -253,9 +261,7 @@ return new Promise(async (resolve) => {
         await page.waitForSelector("#__next > div > div.Topnav_topnavWrapper__wsiGh > div.Topnav_searchBarWrapper__7Z4vM > div > div.Topnav_inputWrapper__cIwcM > input")
         .then((el) => el.type('b'))
         if(Boolean(Math.round(Math.random()))) await page.waitForSelector("#__next > div > div.Topnav_topnavWrapper__wsiGh > div.Topnav_searchBarWrapper__7Z4vM > div > div.Topnav_inputWrapper__cIwcM > input")
-        .then(async() => {
-            await page.keyboard.press('Delete')
-        })
+        .then(async() => await page.keyboard.press('Delete'))
         if(!(await page.url()).includes("https://loot.tv/video/")) return Close("Ne charges pas de vidéo")
         else setTimeout(() => Farm(),10000)
     }
