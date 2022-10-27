@@ -1,7 +1,6 @@
 const moment = require('moment')
 const puppeteer = require('puppeteer')
-const Discord = require('discord.js')
-const Chrome = require('chromium')
+const Discord = require('discord-webhook-node')
 const sleep = (ms) => {
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -10,14 +9,14 @@ const sleep = (ms) => {
     })
 }
 
-const Webhook_URL = process.env.Webhook
+const Webhook_URL = "https://discord.com/api/webhooks/1033417167049347204/LSlbtI04j0fIUVRZ9j00Kc3uQ3DQcU6gkLXSynu5XT6r8OYkNNylBi8PbH2I9WtTZYpW"
 const Colour = "#00ff0a"
 const Default_Speed = 1
-const Hidden = true
+const Hidden = false
 var Instances = [
     {
-        "Mail": process.env.Mail,
-        "Password": process.env.Password
+        "Mail": "alexiswiiu@gmail.com",
+        "Password": "bellot99"
     }
 ]
 const First_Video = "https://loot.tv/video/671725"
@@ -115,8 +114,8 @@ return new Promise(async (resolve) => {
     if(Mail == ('' || null || undefined) || !String(Mail).includes("@") || !String(Mail).includes(".")) return console.log(`Fail Mail Instance : ${N}`)
     if(Password == ('' || null || undefined)) return console.log(`Fail Password Instance : ${N}`)
     if(Webhook == ('' || null || undefined) || !String(Webhook).startsWith("https")) return console.log(`Fail Webhook Instance : ${N}`)
-    const LootTv = new Discord.WebhookClient({url: Webhook})
-    var options = {headless: true, defaultViewport: {width:1920,height:1080}, executablePath: Chrome.path, args: ['--no-sandbox', '--disable-setuid-sandbox']}
+    const LootTv = new Discord.Webhook(Webhook)
+    var options = {headless: true, defaultViewport: {width:1920,height:1080}, args: ['--no-sandbox', '--disable-setuid-sandbox']}
     if(Hidden == false) options.headless = false
     const browser = await puppeteer.launch(options);
     await sleep(1000)
@@ -187,14 +186,12 @@ return new Promise(async (resolve) => {
                 var ms_time = Number(moment.duration(moment().diff(Time)))
                 console.log(`Tu as gagné ${(Point - x).toFixed(2)} pts grâce ${reason} ! (Vidéos vues : ${w} ; Points totaux : ${Point} ;  ${gain.video/(w-1)}pts/vid et ${(ms_time /1000 / 60) / (w-1)}min/vid donc ${((gain.video/(w-1)) / ((ms_time /1000 / 60) / (w-1))) * 8 / 10000 * 60 * 24 *30.45083333333334}$/mois)`)
                 Embed.setTitle(`Gagné ${(Point - x).toFixed(2)} pts grâce ${reason} pour Instance : ${N}`)
-                Embed.addFields(
-                    {name: "Vidéo vues", value: `${w}`},
-                    {name: "Points totaux", value: `${Point}`},
-                    {name: "Vitesse", value: `${Speed}`},
-                    {name: `Points par vidéo pour ${Active+1} Instances`, value: `${gain.video/(w-1)}`},
-                    {name: `Minutes par vidéo pour ${Active+1} Instances`, value: `${(ms_time /1000 / 60) / (w-1)}`},
-                    {name: "Dollar par mois", value: `${((gain.video/(w-1)) / ((ms_time /1000 / 60) / (w-1))) * 8 / 10000 * 60 * 24 * 30.45083333333334}`},
-                )
+                Embed.addField("Vidéo vues",`${w}`)
+              Embed.addField("Points totaux",`${Point}`)
+              Embed.addField("Vitesse",`${Speed}`)
+              Embed.addField(`Points par vidéo pour ${Active+1} Instances`,`${gain.video/(w-1)}`)
+              Embed.addField(`Minutes par vidéo pour ${Active+1} Instances`,`${(ms_time /1000 / 60) / (w-1)}`)
+              Embed.addField("Dollar par mois",`${((gain.video/(w-1)) / ((ms_time /1000 / 60) / (w-1))) * 8 / 10000 * 60 * 24 * 30.45083333333334}`)
                 x = Point
                 y.point = 0
             }else {
