@@ -65,12 +65,14 @@ async function Try_Login(page,Mail,Password) {
         await sleep(3000)
         if(String(await page.url()) == 'https://loot.tv/account/login'){
             y.log++
+            console.log("Fail Try_Login")
             await page.reload()
             await sleep(4000)
             if(y.log <=5) Restart()
             else resolve("Bug")
         } else resolve()
     } catch {
+        console.log("Fail Try_Login (catch error)")
         if(String(await page.url()) == 'https://loot.tv/account/login') Restart()
         else resolve()
     }
