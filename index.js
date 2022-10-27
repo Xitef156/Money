@@ -40,11 +40,14 @@ var Active = 0;
 var Earn = []
 var Speed = (Default_Speed || 1)
 async function Typing(el,text = ""){
-    for(var i = 0;i<text;i++){
-        var letter = text.charAt(i)
-        await el.type(letter)
-        await sleep(200)
-    }
+    return new Promise(async (resolve) => {
+        for(var i = 0;i<text;i++){
+            var letter = text.charAt(i)
+            await el.type(letter)
+            await sleep(200)
+        }
+        resolve()
+    })
 }
 async function Try_Login(page,Mail,Password) {
     return new Promise(async (resolve) => {
@@ -52,10 +55,10 @@ async function Try_Login(page,Mail,Password) {
             try {
                 await sleep(3000)
         await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormFields__1zE8S > div:nth-child(1) > input[type=email]")
-        .then(el => Typing(el,Mail))
+        .then(async el => await Typing(el,Mail))
         await sleep(2000)
         await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormFields__1zE8S > div:nth-child(2) > input[type=password]")
-        .then(el => Typing(el,Password))
+        .then(async el => await Typing(el,Password))
         await sleep(2000)
         await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormButtonWrapper__9nGTl > button")
         .then(el => el.click())
