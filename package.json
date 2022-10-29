@@ -1,21 +1,14 @@
 {
-  "name": "puppeteer-in-repl",
-  "version": "1.0.0",
-  "description": "Something like a test you know?",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"no file specified\" && exit=1"
+    "start": "node index.js"
   },
   "repository": {
-    "type": "git",
-    "url": "none"
+    "type": "git"
   },
   "keywords": [
     "puppeteer"
   ],
-  "author": "coder100",
-  "license": "ISC",
   "dependencies": {
     "chromium": "^3.0.3",
     "discord-webhook-node": "^1.1.8",
