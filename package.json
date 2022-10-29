@@ -1,12 +1,26 @@
 {
-  "dependencies": {
-    "discord.js": "^13.8.1",
-    "moment": "^2.29.3",
-    "puppeteer": "^19.2.0",
-    "chromium": "^3.0.3"
+  "name": "puppeteer-in-repl",
+  "version": "1.0.0",
+  "description": "Something like a test you know?",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"no file specified\" && exit=1"
   },
-  "engines" : { 
-    "npm" : ">=8.0.0 <9.0.0",
-    "node" : ">=16.0.0 <17.0.0"
+  "repository": {
+    "type": "git",
+    "url": "none"
+  },
+  "keywords": [
+    "puppeteer"
+  ],
+  "author": "coder100",
+  "license": "ISC",
+  "dependencies": {
+    "chromium": "^3.0.3",
+    "discord-webhook-node": "^1.1.8",
+    "moment": "^2.29.4",
+    "npm-check-updates": "^16.3.15",
+    "puppeteer": "^19.2.0"
   }
 }
