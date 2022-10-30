@@ -12,7 +12,7 @@ const Chrome = require('chromium').path
 const Webhook_URL = process.env.Webhook
 const Colour = "#00ff0a"
 const Def_Speed = 1
-const Hidden = false
+const Hidden = true
 const Check_Time = 10
 var Instances = [
     {
