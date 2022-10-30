@@ -14,7 +14,7 @@ const Webhook_URL = process.env.Webhook
 const Colour = "#00ff0a"
 const Def_Speed = 1
 const Hidden = true
-const Check_Time = 2
+const Check_Time = 5
 var Instances = [
     {
         "Mail": process.env.Mail,
@@ -22,22 +22,8 @@ var Instances = [
     }
 ]
 const First_Video = "https://loot.tv/video/671725"
-var x = Reward = Active = z = w = 0
-var y = {
-    "log": 0,
-    "page": 0,
-    "point": 0,
-}
-var gain = {
-    "video": 0,
-    "daily": 0,
-    "tv": 0,
-    "unknow": 0
-}
-var Time
 var Earn = []
-var Speed = (Def_Speed || 1)
-async function Typing(el,text = ""){
+async function Typing(el,text){
     return new Promise(async (resolve) => {
         for(var i = 0;i<text.length;i++){
             var letter = text.charAt(i)
@@ -103,6 +89,20 @@ return new Promise(async (resolve) => {
     var Password = Instances[N].Password
     var Webhook = (Instances[N].Webhook || Webhook_URL)
     var Color = (Instances[N].Colour || Colour || "#00ff0a")
+    var x = Reward = Active = z = w = 0
+    var y = {
+        "log": 0,
+        "page": 0,
+        "point": 0,
+    }
+    var gain = {
+        "video": 0,
+        "daily": 0,
+        "tv": 0,
+        "unknow": 0
+    }
+    var Time
+    var Speed = (Def_Speed || 1)
     if(Active <= N) Active = N
     if(Mail == ('' || null || undefined) || !String(Mail).includes("@") || !String(Mail).includes(".")) return console.log(`Fail Mail Instance : ${N}`)
     if(Password == ('' || null || undefined)) return console.log(`Fail Password Instance : ${N}`)
@@ -245,18 +245,20 @@ await TV.setDefaultNavigationTimeout(120000)
                 }
                 LootTv.send(Embed)
             } else y.point++
+            y.page++
         }
         } catch (e){
             if(`${e}`.includes('.//*[@id="__next"]/div/div[1]/div[5]/div/a[1]/div/span')) return Close("Bug de Point")
             else console.log(`Erreur Point ${e}`)
         }
-        y.page++
+        finally {
         try{
             await page.mouse.move(1000,Math.random(20)+500)
             await page.mouse.move(1000,Math.random(20)+500)
             if(await page.url() !== First_Video){
             await sleep(1000)
             var Set;
+            console.log(`Video Speed set...`)
             var Vids = await page.evaluate(() => {
                 var List = []
                 for(let i;i<document.querySelectorAll('cnx-span');i++){
@@ -318,7 +320,7 @@ await TV.setDefaultNavigationTimeout(120000)
               } else console.log(`Erreur time speed ${err}`)
             if(3 >= w-z) Speed -= 0.01
             z = w
-        }
+        } finally {
         try{
             if((await page.$x('//*[@id="__next"]/div/div[2]/div[2]/div/div/div[2]/div[2]/cnx/cnx/cnx[2]/cnx/cnx[3]/cnx[1]/cnx[1]/cnx[1]/cnx[2]/cnx/cnx-span')
             || (await page.$x('//*[@id="id_807c75746d6f426c82c1eaac3ffc46ea"]/cnx[7]/cnx[1]/cnx-span/cnx/cnx-span')) == (null || undefined))) {
@@ -327,7 +329,7 @@ await TV.setDefaultNavigationTimeout(120000)
             else y.page = 0
         } catch {
             console.log("Erreur time video")
-        }
+        } finally {
         try {
             if(Boolean(Math.round(Math.random()))) await page.mouse.wheel({deltaY: -5})
             else await page.mouse.wheel({deltaY: 5})
@@ -341,6 +343,9 @@ await TV.setDefaultNavigationTimeout(120000)
             console.log(`Erreur Final Step ${e}`)
             setTimeout(() => Farm(),Check_Time*1000)
         }
+    }
+    }
+    }
     }
     Farm()
 })
