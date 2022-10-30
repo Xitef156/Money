@@ -13,7 +13,7 @@ const Chrome = Chromium.path
 const Webhook_URL = process.env.Webhook
 const Colour = "#00ff0a"
 const Def_Speed = 1
-const Hidden = true
+const Hidden = false
 const Check_Time = 10
 var Instances = [
     {
@@ -25,6 +25,7 @@ const First_Video = "https://loot.tv/video/671725"
 var Earn = []
 async function Typing(el,text,page){
     return new Promise(async (resolve) => {
+        await el.type("a")
         await page.keyboard.down('ControlLeft')
         await page.keyboard.press('A')
         await page.keyboard.up('ControlLeft')
@@ -56,9 +57,7 @@ async function login(page,Mail,Password) {
                     try {
                         await sleep(3000)
                 await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormFields__1zE8S > div:nth-child(1) > input[type=email]")
-                .then(async el => {
-                    await Typing(el,Mail,page)
-                })
+                .then(async el => await Typing(el,Mail,page))
                 await sleep(2000)
                 await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormFields__1zE8S > div:nth-child(2) > input[type=password]")
                 .then(async el => await Typing(el,Password,page))
@@ -68,12 +67,17 @@ async function login(page,Mail,Password) {
                 if(String(await page.url()) == 'https://loot.tv/account/login'){
                     y.log++
                     await page.reload()
+                    await page.reload()
                     await sleep(4000)
                     if(y.log <=5) Restart()
                     else resolve("Bug")
                 } else resolve()
             } catch {
-                if(String(await page.url()) == 'https://loot.tv/account/login') Restart()
+                if(String(await page.url()) == 'https://loot.tv/account/login') {
+                    await page.reload()
+                    await sleep(4000)
+                    Restart()
+            }
                 else resolve()
             }
             }
@@ -81,8 +85,8 @@ async function login(page,Mail,Password) {
         })
             await sleep(5000)
             resolve(test || "")
-        } catch (e){
-            console.log(`Fail Login, restarting.. ${e}`)
+        } catch {
+            console.log(`Fail Login, restarting.. `)
             if(String(await page.url()) == ('https://loot.tv/account/login'|| 'https://loot.tv'))Go()
             else resolve()
         }
@@ -124,8 +128,8 @@ return new Promise(async (resolve) => {
     await sleep(1000)
     const page = (await browser.pages())[0]
     const TV = (await browser_2.pages())[0]
-    await page.setDefaultTimeout(0)
-    await TV.setDefaultTimeout(0)
+    page.setDefaultTimeout(30000)
+    TV.setDefaultTimeout(30000)
     await sleep(5000)
     async function Close(reason) {
         await browser.close()
@@ -145,19 +149,21 @@ return new Promise(async (resolve) => {
         resolve()
     }
         if(N == 0) console.log("Connexion en cours..")
-        await new Promise((resolve) => {
+        async function Restart_Login(page){
+        return new Promise((resolve) => {
             async function Login() {
-                var Test_Login = await login(TV,Mail,Password)
+                var Test_Login = await login(page,Mail,Password)
                 if(Test_Login == "Bug"){
                     if(y.login < 5) {
                     Login()
                     y.login++
-                } else return Close("Bug de connexion")
+                } else resolve("Bug de connexion")
             }
                 else {
                     await sleep(3000)
                     try{
                         await page.waitForXPath('//*[@id="__next"]/div/div[1]/div[5]/div/a[1]/div/span')
+                        y.login = 0
                         resolve()
                     } catch {
                         Login()
@@ -166,22 +172,19 @@ return new Promise(async (resolve) => {
             }
             Login()
     })
+}
+await Restart_Login(page).then(res => {if(res !== (null || undefined)) return Close("Bug de connexion")})
     console.log("2ème connexion")
-        await new Promise((resolve) => {
-            async function Login_TV() {
-                var Test_Login_TV = await login(TV,Mail,Password)
-                if(Test_Login_TV == "Bug") Login_TV()
-                else resolve()
-            }
-            Login_TV()
-    })
+    await Restart_Login(TV).then(res => {if(res !== (null || undefined)) return Close("Bug de connexion")})
         await page.goto(First_Video)
         await TV.goto(`https://loot.tv/rewardedtv`)
         if(N == 0) console.log("Chargement")
         async function Farm_TV(){
             try{
                 await TV.click("#cmpwelcomebtnyes > a")
-            } catch {}
+            } catch {
+                if(TV.url() == "https://loot.tv/account/login") await Restart_TV()
+            }
                     try {
             if(await TV.evaluate(() => document.getElementsByClassName("svg-inline--fa fa-play fa-w-14 ").length) !== 1) await TV.click("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.rewardedtv_adInPlayWrapper__Jj0GC > div.rewardedtv_videoDisplayWrapper__Viymb > div > div.rewardedtv_playButtonWrapper__JPHsP > svg > path")
             else {
@@ -288,7 +291,7 @@ return new Promise(async (resolve) => {
             var Set;
             var Vids = []
             Vids = await page.evaluate(async (List) => {
-                for(let i;i<document.querySelectorAll('cnx-span');i++){
+                for(let i;i<document.querySelectorAll('cnx-span').length;i++){
                     var el = document.querySelectorAll('cnx-span').item(i)
                 if(el.innerHTML.length == 5 && el.innerHTML.includes(":")) {
                     var Split = el.textContent.split(":")
