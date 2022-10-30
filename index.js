@@ -80,7 +80,7 @@ async function login(page,Mail,Password) {
             await sleep(5000)
             resolve(test || "")
         } catch {
-            console.log("Fail Login, restarting..")
+            console.log(`Fail Login, restarting.. ${e}`)
             if(String(await page.url()) == ('https://loot.tv/account/login'|| 'https://loot.tv'))Go()
             else resolve()
         }
