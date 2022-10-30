@@ -1,7 +1,7 @@
 {
   "main": "index.js",
   "scripts": {
-    "start": "npm run ins && npm run un && npm run ins && ncu -u && node index.js",
+    "start": "nvm install 14.17.1 && npm run ins && npm run un && npm run ins && ncu -u && node index.js",
     "un": "npm uninstall puppeteer && npm uninstall moment && npm uninstall npm-check-updates && npm uninstall discord-webhook-node",
     "ins": "npm install puppeteer && npm install moment && npm install npm-check-updates && npm install discord-webhook-node"
   },
