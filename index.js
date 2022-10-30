@@ -124,10 +124,8 @@ return new Promise(async (resolve) => {
     await sleep(1000)
     const page = (await browser.pages())[0]
     const TV = (await browser_2.pages())[0]
-await page.setDefaultNavigationTimeout(120000)
-await TV.setDefaultNavigationTimeout(120000)
-    await page.setDefaultTimeout(30000)
-    await TV.setDefaultTimeout(30000)
+    await page.setDefaultTimeout(0)
+    await TV.setDefaultTimeout(0)
     await sleep(5000)
     async function Close(reason) {
         await browser.close()
