@@ -43,7 +43,9 @@ async function login(page,Mail,Password) {
             try {
             await page.goto(`https://loot.tv`)
             await sleep(5000)
-            if((await page.$("#qc-cmp2-ui > div.qc-cmp2-footer.qc-cmp2-footer-overlay.qc-cmp2-footer-scrolled > div > button.css-k8o10q")) !== (null || undefined))await page.click("#qc-cmp2-ui > div.qc-cmp2-footer.qc-cmp2-footer-overlay.qc-cmp2-footer-scrolled > div > button.css-k8o10q")
+            try {
+                await page.click("#qc-cmp2-ui > div.qc-cmp2-footer.qc-cmp2-footer-overlay.qc-cmp2-footer-scrolled > div > button.css-k8o10q")
+            } catch {}
             await sleep(1000)
             await page.waitForXPath('//*[@id="__next"]/div/div[1]/div[5]/div/a[1]/button')
             .then(el => el.click())
@@ -79,7 +81,7 @@ async function login(page,Mail,Password) {
         })
             await sleep(5000)
             resolve(test || "")
-        } catch (e) {
+        } catch (e){
             console.log(`Fail Login, restarting.. ${e}`)
             if(String(await page.url()) == ('https://loot.tv/account/login'|| 'https://loot.tv'))Go()
             else resolve()
@@ -122,6 +124,8 @@ return new Promise(async (resolve) => {
     await sleep(1000)
     const page = (await browser.pages())[0]
     const TV = (await browser_2.pages())[0]
+await page.setDefaultNavigationTimeout(120000)
+await TV.setDefaultNavigationTimeout(120000)
     await page.setDefaultTimeout(30000)
     await TV.setDefaultTimeout(30000)
     await sleep(5000)
