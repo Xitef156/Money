@@ -14,7 +14,7 @@ const Webhook_URL = process.env.Webhook
 const Colour = "#00ff0a"
 const Def_Speed = 1
 const Hidden = true
-const Check_Time = 5
+const Check_Time = 10
 var Instances = [
     {
         "Mail": process.env.Mail,
@@ -50,7 +50,9 @@ async function login(page,Mail,Password) {
                     try {
                         await sleep(3000)
                 await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormFields__1zE8S > div:nth-child(1) > input[type=email]")
-                .then(async el => await Typing(el,Mail))
+                .then(async el => {
+                    await Typing(el,Mail)
+                })
                 await sleep(2000)
                 await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormFields__1zE8S > div:nth-child(2) > input[type=password]")
                 .then(async el => await Typing(el,Password))
@@ -99,7 +101,7 @@ return new Promise(async (resolve) => {
         "video": 0,
         "daily": 0,
         "tv": 0,
-        "unknow": 0
+        "unknown": 0
     }
     var Time
     var Speed = (Def_Speed || 1)
@@ -189,7 +191,7 @@ await TV.setDefaultNavigationTimeout(120000)
                     Reward += Gain
                     var views = await new Promise((resolve) => {
                         var watch = 0
-                        var Remainder = Gain
+                        var Remainder = Number((Gain).toFixed(2))
                     async function Spread() {
                         var t = Remainder
                     if(Number((Remainder).toFixed(2)) >= 5) {
@@ -216,7 +218,7 @@ await TV.setDefaultNavigationTimeout(120000)
                     }
                     if(t == Remainder) {
                         reason.push(`à ${t} points inconnus`)
-                        gain.unknow += t
+                        gain.unknown += t
                     }
                     if(Remainder > 0 && t !== Remainder) Spread()
                     else resolve(watch)
@@ -251,16 +253,14 @@ await TV.setDefaultNavigationTimeout(120000)
             if(`${e}`.includes('.//*[@id="__next"]/div/div[1]/div[5]/div/a[1]/div/span')) return Close("Bug de Point")
             else console.log(`Erreur Point ${e}`)
         }
-        finally {
         try{
             await page.mouse.move(1000,Math.random(20)+500)
             await page.mouse.move(1000,Math.random(20)+500)
             if(await page.url() !== First_Video){
             await sleep(1000)
             var Set;
-            console.log(`Video Speed set...`)
-            var Vids = await page.evaluate(() => {
-                var List = []
+            var Vids = []
+            Vids = await page.evaluate(async (List) => {
                 for(let i;i<document.querySelectorAll('cnx-span');i++){
                     var el = document.querySelectorAll('cnx-span').item(i)
                 if(el.innerHTML.length == 5 && el.innerHTML.includes(":")) {
@@ -269,7 +269,8 @@ await TV.setDefaultNavigationTimeout(120000)
                 }
                 }
                 return List
-            })
+            },Vids)
+            await sleep(1000)
             if((await Vids.length) == (2 || 3)){
             if((await Vids.length) == 3) Vids.shift()
             var Point_Video = await page.evaluate((Speed) => {
@@ -320,7 +321,7 @@ await TV.setDefaultNavigationTimeout(120000)
               } else console.log(`Erreur time speed ${err}`)
             if(3 >= w-z) Speed -= 0.01
             z = w
-        } finally {
+        }
         try{
             if((await page.$x('//*[@id="__next"]/div/div[2]/div[2]/div/div/div[2]/div[2]/cnx/cnx/cnx[2]/cnx/cnx[3]/cnx[1]/cnx[1]/cnx[1]/cnx[2]/cnx/cnx-span')
             || (await page.$x('//*[@id="id_807c75746d6f426c82c1eaac3ffc46ea"]/cnx[7]/cnx[1]/cnx-span/cnx/cnx-span')) == (null || undefined))) {
@@ -329,7 +330,7 @@ await TV.setDefaultNavigationTimeout(120000)
             else y.page = 0
         } catch {
             console.log("Erreur time video")
-        } finally {
+        }
         try {
             if(Boolean(Math.round(Math.random()))) await page.mouse.wheel({deltaY: -5})
             else await page.mouse.wheel({deltaY: 5})
@@ -343,9 +344,6 @@ await TV.setDefaultNavigationTimeout(120000)
             console.log(`Erreur Final Step ${e}`)
             setTimeout(() => Farm(),Check_Time*1000)
         }
-    }
-    }
-    }
     }
     Farm()
 })
