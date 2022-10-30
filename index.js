@@ -96,6 +96,7 @@ return new Promise(async (resolve) => {
         "log": 0,
         "page": 0,
         "point": 0,
+        "login": 0
     }
     var gain = {
         "video": 0,
@@ -132,14 +133,32 @@ await TV.setDefaultNavigationTimeout(120000)
         Earn.push(json)
         Time = null
         Speed = ((Speed-1)/2)+1
-        y.page = y.point = y.log = Reward = x = gain.video = gain.tv = gain.unknow = w = 0
+        y.page = y.point = y.log = Reward = x = gain.video = gain.tv = gain.unknown = w = 0
         console.log(`Close et restart pour l'instance ${N}, raison : ${reason} `+JSON.stringify(json))
         LootTv.send(`Close et restart pour l'instance ${N}, raison : ${reason} `+JSON.stringify(json))
         resolve()
     }
         if(N == 0) console.log("Connexion en cours..")
-        var Test_Login = await login(page,Mail,Password)
-        if(Test_Login == "Bug") return Close(`Bug de connexion`)
+        await new Promise((resolve) => {
+            async function Login() {
+                var Test_Login_TV = await login(TV,Mail,Password)
+                if(Test_Login_TV == "Bug" && y.login < 5) {
+                    Login()
+                    y.login++
+                }
+                else if(y.login == 5 && Test_Login_TV == "Bug") return Close("Bug de connexion")
+                else {
+                    await sleep(3000)
+                    try{
+                        await page.waitForXPath('//*[@id="__next"]/div/div[1]/div[5]/div/a[1]/div/span')
+                        resolve()
+                    } catch {
+                        Login()
+                    }
+                }
+            }
+            Login()
+    })
         await new Promise((resolve) => {
             async function Login_TV() {
                 var Test_Login_TV = await login(TV,Mail,Password)
