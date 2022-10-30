@@ -1,7 +1,7 @@
 {
   "main": "index.js",
   "scripts": {
-    "start": "npm un && npm install && node index.js",
+    "start": "npm run un && npm install && node index.js",
     "un": "npm uninstall puppeteer && npm uninstall moment && npm uninstall npm-check-updates && npm uninstall discord-webhook-node"
   },
   "repository": {
