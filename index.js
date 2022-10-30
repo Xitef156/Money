@@ -120,7 +120,7 @@ return new Promise(async (resolve) => {
     if(Password == ('' || null || undefined)) return console.log(`Fail Password Instance : ${N}`)
     if(Webhook == ('' || null || undefined) || !String(Webhook).startsWith("https")) return console.log(`Fail Webhook Instance : ${N}`)
     const LootTv = new Discord.Webhook(Webhook)
-    var options = {headless: true, defaultViewport: {width:1920,height:1080},executablePath: Chrome, args: ['--no-sandbox', '--disable-setuid-sandbox']}
+    var options = {headless: true,executablePath: Chrome, args: ['--no-sandbox', '--disable-setuid-sandbox']}
     if(Hidden == false) options.headless = false
     const browser = await puppeteer.launch(options);
     const browser_2 = await puppeteer.launch(options);
