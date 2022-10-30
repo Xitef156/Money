@@ -1,7 +1,8 @@
 {
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "npm un && npm install && node index.js",
+    "un": "npm uninstall puppeteer && npm uninstall moment && npm uninstall npm-check-updates && npm uninstall discord-webhook-node"
   },
   "repository": {
     "type": "git"
