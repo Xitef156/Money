@@ -159,6 +159,7 @@ await TV.setDefaultNavigationTimeout(120000)
             }
             Login()
     })
+    console.log("2ème connexion")
         await new Promise((resolve) => {
             async function Login_TV() {
                 var Test_Login_TV = await login(TV,Mail,Password)
