@@ -23,8 +23,12 @@ var Instances = [
 ]
 const First_Video = "https://loot.tv/video/671725"
 var Earn = []
-async function Typing(el,text){
+async function Typing(el,text,page){
     return new Promise(async (resolve) => {
+        await page.keyboard.down('ControlLeft')
+        await page.keyboard.press('A')
+        await page.keyboard.up('ControlLeft')
+        await page.keyboard.press('Delete')
         for(var i = 0;i<text.length;i++){
             var letter = text.charAt(i)
             await el.type(letter)
@@ -51,11 +55,11 @@ async function login(page,Mail,Password) {
                         await sleep(3000)
                 await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormFields__1zE8S > div:nth-child(1) > input[type=email]")
                 .then(async el => {
-                    await Typing(el,Mail)
+                    await Typing(el,Mail,page)
                 })
                 await sleep(2000)
                 await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormFields__1zE8S > div:nth-child(2) > input[type=password]")
-                .then(async el => await Typing(el,Password))
+                .then(async el => await Typing(el,Password,page))
                 await sleep(2000)
                 await page.click("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormButtonWrapper__9nGTl > button")
                 await sleep(3000)
@@ -120,6 +124,8 @@ return new Promise(async (resolve) => {
     const TV = (await browser_2.pages())[0]
 await page.setDefaultNavigationTimeout(120000)
 await TV.setDefaultNavigationTimeout(120000)
+    await page.setDefaultTimeout(30000)
+    await TV.setDefaultTimeout(30000)
     await sleep(5000)
     async function Close(reason) {
         await browser.close()
@@ -141,12 +147,13 @@ await TV.setDefaultNavigationTimeout(120000)
         if(N == 0) console.log("Connexion en cours..")
         await new Promise((resolve) => {
             async function Login() {
-                var Test_Login_TV = await login(TV,Mail,Password)
-                if(Test_Login_TV == "Bug" && y.login < 5) {
+                var Test_Login = await login(TV,Mail,Password)
+                if(Test_Login == "Bug"){
+                    if(y.login < 5) {
                     Login()
                     y.login++
-                }
-                else if(y.login == 5 && Test_Login_TV == "Bug") return Close("Bug de connexion")
+                } else return Close("Bug de connexion")
+            }
                 else {
                     await sleep(3000)
                     try{
