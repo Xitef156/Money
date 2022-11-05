@@ -399,7 +399,7 @@ return new Promise(async resolve => {
             .then(async() => await page.keyboard.press('Delete'))
             if(!(await page.url()).includes("https://loot.tv/video/")) return Close("Ne charges pas de vidéo")
             else {
-                if(N == 0) Time += Check_Time
+                Time += Check_Time
                 setTimeout(() => Farm(),Check_Time*1000)
             }
         } catch (e){
