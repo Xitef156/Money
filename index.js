@@ -8,7 +8,6 @@ var Instances = [
   }
 ]
 const Options = require('./config_LootTV.json')
-const {QuickDB} = require('quick.db'); const db = new QuickDB();
 const sleep = (ms) => {
     return new Promise(resolve => {
         setTimeout(() => {
@@ -71,19 +70,19 @@ async function login(page,N) {
                     try {
                         await sleep(3000)
                 await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormFields__1zE8S > div:nth-child(1) > input[type=email]")
-                .then(async el => await Typing(el,(await db.get(`Mail_${N}`)),page))
+                .then(async el => await Typing(el,(Mail),page))
                 await sleep(2000)
                 await page.waitForSelector("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormFields__1zE8S > div:nth-child(2) > input[type=password]")
-                .then(async el => await Typing(el,(await db.get(`Password_${N}`)),page))
+                .then(async el => await Typing(el,(Paswword),page))
                 await sleep(2000)
                 await page.click("#__next > div > div._app_mainWrappr__G3eiJ > div._app_contentWrapper__KFde2 > div > div > div.AccountForm_accountFormButtonWrapper__9nGTl > button")
                 await sleep(3000)
                 if(String(await page.url()) == 'https://loot.tv/account/login'){
-                    await db.set(`y_log_${N}`,(await db.get(`y_log_${N}`))+1)
+                    y.log++
                     await page.reload()
                     await page.reload()
                     await sleep(4000)
-                    if((await db.get(`y_log_${N}`)) <=5) Restart()
+                    if(y.log <=5) Restart()
                     else resolve("Bug")
                 } else resolve()
             } catch {
@@ -109,40 +108,42 @@ async function login(page,N) {
  */
 
 async function launch(N,browser) {
-    await db.set(`Mail_${N}`,Instances[N].Mail)
-    await db.set(`Password_${N}`,Instances[N].Password)
-    if(Instances[N].Webhook !== (null || undefined)) await db.set(`Webhook_${N}`,Instances[N].Webhook)
-    else await db.set(`Webhook_${N}`,Webhook_URL)
-    if(Instances[N].Colour !== (null || undefined)) await db.set(`Color_${N}`,Instances[N].Colour)
-    else if(Colour !== (null || undefined)) await db.set(`Color_${N}`,Colour)
-    else await db.set(`Color_${N}`,"#00ff0a")
-    if(Instances[N].Colour_TV !== (null || undefined)) await db.set(`Color_TV_${N}`,Instances[N].Colour_TV)
-    else if(Colour_TV !== (null || undefined)) await db.set(`Color_TV_${N}`,Colour_TV)
-    else await db.set(`Color_TV_${N}`,"#300faa")
-    await db.set(`x_${N}`,0)
-    await db.set(`Reward_${N}`,0)
-    await db.set(`z_${N}`,0)
-    await db.set(`w_${N}`,0)
-    await db.set(`TV_${N}`,0)
-    await db.set(`y_log_${N}`,0)
-    await db.set(`y_login_${N}`,0)
-    await db.set(`y_point_${N}`,0)
-    await db.set(`y_page_${N}`,0)
-    await db.set(`gain_video_${N}`,0)
-    await db.set(`gain_tv_${N}`,0)
-    await db.set(`gain_unknown_${N}`,0)
-    await db.set(`gain_daily_${N}`,0)
-    await db.set(`Time_${N}`,0)
-    if(Maximum.speed == 0) {
-        if(Def_Speed >= 1) await db.set(`Speed_${N}`,Def_Speed)
-        else await db.set(`Speed_${N}`,1)
+    var Mail = Instances[N].Mail
+    var Password = Instances[N].Password
+    var Color = ""
+    var Color_TV = ""
+    var Webhook = ""
+    if(Instances[N].Webhook !== (null || undefined)) Webhook = Instances[N].Webhook
+    else Webhook = Webhook_URL
+    if(Instances[N].Colour !== (null || undefined)) Color = Instances[N].Colour
+    else if(Colour !== (null || undefined)) Color = Colour
+    else Color = "#00ff0a"
+    if(Instances[N].Colour_TV !== (null || undefined)) Color_TV = Instances[N].Colour_TV
+    else if(Colour_TV !== (null || undefined)) Color_TV = Colour_TV
+    else Color_TV = "#300faa"
+    var x = Reward = z = w = tv = time = 0
+    var y = {
+        "log": 0,
+        "login": 0,
+        "point": 0,
+        "page": 0
     }
-    else await db.set(`Speed_${N}`,Maximum.speed)
+    var gain = {
+        "video": 0,
+        "tv": 0,
+        "unknown": 0,
+        "daily": 0
+    }
+    if(Maximum.speed == 0) {
+        if(Def_Speed >= 1) Speed = Def_Speed
+        else Speed = 1
+    }
+    else Speed = Maximum.speed
     if(Active <= N) Active = N
-    if(String(await db.get(`Mail_${N}`)) == ('' || null || undefined) || !String(await db.get(`Mail_${N}`)).includes("@") || !String(await db.get(`Mail_${N}`)).includes(".")) return console.log(`Fail Mail Instance : ${N}`)
-    if(String(await db.get(`Password_${N}`)) == ('' || null || undefined)) return console.log(`Fail Password Instance : ${N}`)
-    if(String(await db.get(`Webhook_${N}`)) == ('' || null || undefined) || !String(await db.get(`Webhook_${N}`)).startsWith("https")) return console.log(`Fail Webhook Instance : ${N}`)
-    const LootTv = new Discord.Webhook(await db.get(`Webhook_${N}`))
+    if(String(Mail) == ('' || null || undefined) || !String(Mail).includes("@") || !String(Mail).includes(".")) return console.log(`Fail Mail Instance : ${N}`)
+    if(String(Password) == ('' || null || undefined)) return console.log(`Fail Password Instance : ${N}`)
+    if(String(Webhook) == ('' || null || undefined) || !String(Webhook).startsWith("https")) return console.log(`Fail Webhook Instance : ${N}`)
+    const LootTv = new Discord.Webhook(Webhook)
 return new Promise(async resolve => {
     const page = (await browser.pages())[0]
     page.setDefaultTimeout(20000)
@@ -150,15 +151,10 @@ return new Promise(async resolve => {
         await browser.close()
         if(reason == "12min écoulées") f++
         json = {
-            "Video": (await db.get(`w_${N}`)),
-            "Point": (await db.get(`Reward_${N}`))+2.5,
-            "Time (en min)": (await db.get(`Time_${N}`))/60,
-            "Gain": {
-                "video": (await db.get(`gain_video_${N}`)),
-                "tv": (await db.get(`gain_tv_${N}`)),
-                "unknown": (await db.get(`gain_unknown_${N}`)),
-                "daily": (await db.get(`gain_daily_${N}`))
-            },
+            "Video": w,
+            "Point": (Reward)+2.5,
+            "Time (en min)": Time/60,
+            "Gain": gain,
             "Maximum": Maximum
         }
         console.log(`Close et restart pour l'instance ${N}, raison : ${reason} `+JSON.stringify(json))
@@ -170,17 +166,15 @@ return new Promise(async resolve => {
             async function Login() {
                 var Test_Login = await login(page,N)
                 if(Test_Login == "Bug"){
-                    if((await db.get(`y_login_${N}`)) < 5) {
+                    if(y.login < 5) {
                     Login()
-                    await db.set(`y_login_${N}`,(await db.get(`y_login_${N}`)))
+                    y.login = 0
                 } else resolve("Bug de connexion")
             }
                 else {
                     await sleep(3000)
                     try{
                         await page.waitForXPath('//*[@id="__next"]/div/div[1]/div[5]/div/a[1]/div/span')
-                        await db.delete(`y_login_${N}`)
-                        await db.delete(`y_log_${N}`)
                         resolve()
                     } catch {
                         Login()
@@ -213,15 +207,15 @@ return new Promise(async resolve => {
         async function Farm(){
         if((await browser.pages()).length == (null || undefined || 0)) return Close()
         const Embed = new Discord.MessageBuilder()
-        Embed.setColor(await db.get(`Color_${N}`))
+        Embed.setColor(Color)
         try {
-            if((await db.get(`y_point_${N}`)) == 72*10/Check_Time) return Close("12min écoulées")
+            if(y.point == 72*10/Check_Time) return Close("12min écoulées")
             var Point = await page.evaluate(el => Number(el.textContent.replace(',','.').replace(/\s/g, '').replace("Points",'')),await page.waitForXPath('//*[@id="__next"]/div/div[1]/div[5]/div/a[1]/div/span'))
-            if((await db.get(`x_${N}`)) != Point) {
-                if((await db.get(`x_${N}`)) !== 0){
+            if(x != Point) {
+                if(x !== 0){
                     var reason = [];
-                    var Gain = Point - (await db.get(`x_${N}`))
-                    if((await db.get(`w_${N}`)) == 0) {
+                    var Gain = Point - x
+                    if(w == 0) {
                         const TV = await browser.newPage()
                         await new Promise(async resolve => {async function Rew(){try{await TV.goto(`https://loot.tv/rewardedtv`);resolve()} catch {Rew()}}Rew()})
                         await TV.setDefaultTimeout(1000)
@@ -229,7 +223,7 @@ return new Promise(async resolve => {
                         if(Number((Gain).toFixed(2)) < 2.5) return setTimeout(() => Farm(),10000)
                         console.log(`Farm débute à ${moment().format('H:mm:ss')} pour Instance : ${N}`)
                         Embed.setTitle(`Farm débute à ${moment().format('H:mm:ss')} pour Instance : ${N}`)
-                    } else await db.set(`Reward_${N}`, (await db.get(`Reward_${N}`))+Gain)
+                    } else Reward += Gain
                     var views = await new Promise(async resolve => {
                         var watch = 0
                         var spreaded = 0
@@ -240,7 +234,7 @@ return new Promise(async resolve => {
                         spreaded++
                     if(Number((Remainder).toFixed(2)) >= 5) {
                         var num = Number((Remainder/5).toString().split(".")[0])
-                        await db.set(`gain_daily_${N}`,(await db.get(`gain_daily_${N}`) + num*5))
+                        gain.daily += num*5
                         Total.points += num*5
                         Remainder -= num*5
                         reason.push("aux points quotidient")
@@ -248,12 +242,12 @@ return new Promise(async resolve => {
                     if(Number((Remainder).toFixed(1).split(".")[1]) == (5||6)){
                         var num  = Number((Remainder/2.5).toString().split(".")[0])
                         Remainder -= num*2.5
-                        await db.set(`gain_video_${N}`,(await db.get(`gain_video_${N}`) + num*2.5))
+                        gain.video += num*2.5
                         Total.points += num*2.5
                         Total.video++
                         watch += num
                         reason.push(`à ${num} vidéo`)
-                        await db.set(`y_point_${N}`,0)
+                        y.point = 0
                     }
                     if(Number((Remainder).toFixed(2)) <= 1){
                         var num  = Number((Remainder/0.05).toString().split(".")[0])
@@ -262,54 +256,54 @@ return new Promise(async resolve => {
                             Total.points += num*0.05
                             Total.tv++
                             reason.push(`à ${num} Rewarded TV`)
-                            await db.set(`TV_${N}`,(await db.get(`TV_${N}`)) + num)
-                            await db.set(`gain_tv_${N}`,(await db.get(`gain_tv_${N}`) + num*0.05))
+                            tv += num
+                            gain.tv += num*0.05
                         }
                     }
                     if(t == Remainder && spreaded == 5) {
                         reason.push(`à ${t} points inconnus`)
-                        await db.set(`gain_unknown_${N}`,(await db.get(`gain_unknown_${N}`) + t))
+                        gain.unknown += t
                     } else if(Remainder > 0 && spreaded != 5) Spread(Number(Number(Remainder).toFixed(2)))
                     else resolve(watch)
                 }
                 Spread(R)
             })
-            await db.set(`w_${N}`,(await db.get(`w_${N}`)) + views)
-                    var s_time = (await db.get(`Time_${N}`))
-                    Total.monthly.int.push((await db.get(`Reward_${N}`)) / ((s_time / 60) * 8 / 10000 * 60 * 24 *30.4375))
+            w += views
+                    var s_time = Time
+                    Total.monthly.int.push((Reward) / ((s_time / 60) * 8 / 10000 * 60 * 24 *30.4375))
                     Total.monthly.total = (Total.monthly.int.reduce((partialSum, a) => partialSum + a, 0)/(Total.monthly.int.length*(Active+1)))
                     if(reason.length == 1 && reason[0] == "à 1 Rewarded TV"){
-                        Embed.setColor(await db.get(`Color_TV_${N}`))
+                        Embed.setColor(Color_TV)
                         console.log(`Tu as gagné ${(Gain).toFixed(2)} pts grâce ${reason.join(" et ")} ! pour Instance : ${N} (Points totaux : ${Point})`)
                         Embed.setTitle(`Gagné ${(Gain).toFixed(2)} pts grâce ${reason.join(" et ")} pour Instance : ${N}`)
                         .addField("Points totaux / Total",`${Point} / ${Total.points.toFixed(2)}`)
-                        .addField("Dollar par mois / Total par mois",`${(((await db.get(`Reward_${N}`)) / ((s_time / 60))) * 8 / 10000 * 60 * 24 * 30.4375).toFixed(2)} / ${Total.monthly.total.toFixed(2)}`)
+                        .addField("Dollar par mois / Total par mois",`${(((Reward) / ((s_time / 60))) * 8 / 10000 * 60 * 24 * 30.4375).toFixed(2)} / ${Total.monthly.total.toFixed(2)}`)
                     } else {
-                        if((((await db.get(`Reward_${N}`)) / ((s_time / 60))) * 8 / 10000 * 60 * 24 *30.4375).toFixed(2) > Maximum.dollar){
-                            Maximum.dollar = (((await db.get(`Reward_${N}`)) / ((s_time / 60))) * 8 / 10000 * 60 * 24 *30.4375).toFixed(2)
-                            Maximum.speed = (await db.get(`Speed_${N}`))
+                        if((((Reward) / ((s_time / 60))) * 8 / 10000 * 60 * 24 *30.4375).toFixed(2) > Maximum.dollar){
+                            Maximum.dollar = (((Reward) / ((s_time / 60))) * 8 / 10000 * 60 * 24 *30.4375).toFixed(2)
+                            Maximum.speed = (Speed)
                         }
-                        console.log(`Tu as gagné ${(Gain).toFixed(2)} pts grâce ${reason.join(" et ")} ! pour Instance : ${N} (Vidéos vues : ${await db.get(`w_${N}`)} ; Points totaux : ${Point} ; ${((s_time / 60) / ((await db.get(`w_${N}`))-1)).toFixed(2)}min/vid donc ${(((await db.get(`Reward_${N}`)) / ((s_time / 60))) * 8 / 10000 * 60 * 24 *30.4375).toFixed(2)}$/mois)`)
+                        console.log(`Tu as gagné ${(Gain).toFixed(2)} pts grâce ${reason.join(" et ")} ! pour Instance : ${N} (Vidéos vues : ${w} ; Points totaux : ${Point} ; ${((s_time / 60) / (w-1)).toFixed(2)}min/vid donc ${(((Reward) / ((s_time / 60))) * 8 / 10000 * 60 * 24 *30.4375).toFixed(2)}$/mois)`)
                         Embed.setTitle(`Gagné ${(Gain).toFixed(2)} pts grâce ${reason.join(" et ")} pour Instance : ${N}`)
-                        .addField("Vidéo vues / TV vues / Total_video / Total TV",`${await db.get(`w_${N}`)} et ${await db.get(`TV_${N}`)} / ${Total.video} et ${Total.tv}`)
+                        .addField("Vidéo vues / TV vues / Total_video / Total TV",`${w} et ${tv} / ${Total.video} et ${Total.tv}`)
                         .addField("Points totaux / Total",`${Point} / ${Total.points.toFixed(2)}`)
-                        .addField("Vitesse / Max",`${await db.get(`Speed_${N}`)} / ${Maximum.speed} (${Maximum.dollar})`)
-                        .addField(`Minutes par vidéo`,`${(s_time / 60) / ((await db.get(`w_${N}`))-1)}`)
-                        .addField("Dollar par mois / Total par mois",`${(((await db.get(`Reward_${N}`)) / ((s_time / 60))) * 8 / 10000 * 60 * 24 * 30.4375).toFixed(2)} / ${Total.monthly.total.toFixed(2)}`)
+                        .addField("Vitesse / Max",`${Speed} / ${Maximum.speed} (${Maximum.dollar})`)
+                        .addField(`Minutes par vidéo`,`${(s_time / 60) / (w-1)}`)
+                        .addField("Dollar par mois / Total par mois",`${(((Reward) / ((s_time / 60))) * 8 / 10000 * 60 * 24 * 30.4375).toFixed(2)} / ${Total.monthly.total.toFixed(2)}`)
                 }
                         if(views > 0 && f != 3){
-                        if(Number((s_time / 60) / ((await db.get(`w_${N}`))-1)) !== (Infinity || NaN || 0) && (s_time / 60) / ((await db.get(`w_${N}`))-1) < 5) await db.set(`Speed_${N}`, (await db.get(`Speed_${N}`))+ 0.01)
-                        else await db.set(`Speed_${N}`, (await db.get(`Speed_${N}`))- 0.01)
+                        if(Number((s_time / 60) / (w-1)) !== (Infinity || NaN || 0) && (s_time / 60) / (w-1) < 5) speed += 0.01
+                        else Speed -= 0.01
                     }
-                    await db.set(`x_${N}`,Point)
+                    x = Point
                 } else {
-                    await db.set(`x_${N}`,Point)
-                    console.log(`Tu commence avec ${Point} pts avec ${await db.get(`Speed_${N}`)} de vitesse pour Instance : ${N}`)
-                    Embed.setTitle(`Tu commence avec ${Point} pts avec ${await db.get(`Speed_${N}`)} de vitesse pour Instance : ${N}`)
+                    x = Point
+                    console.log(`Tu commence avec ${Point} pts avec ${Speed} de vitesse pour Instance : ${N}`)
+                    Embed.setTitle(`Tu commence avec ${Point} pts avec ${Speed} de vitesse pour Instance : ${N}`)
                 }
                 LootTv.send(Embed)
-            } else await db.set(`y_point_${N}`, (await db.get(`y_point_${N}`))+ 1)
-            await db.set(`y_page_${N}`, (await db.get(`y_page_${N}`))+ 1)
+            } y.point++
+            y.page++
         } catch (e){
             if(`${e}`.includes('.//*[@id="__next"]/div/div[1]/div[5]/div/a[1]/div/span')) return Close("Bug de Point")
             else {
@@ -357,7 +351,7 @@ return new Promise(async resolve => {
                     }
                 }
             })
-            },(await db.get(`Speed_${N}`)))
+            },Speed)
             if(Point_Video.bool == true){
                 var Current = Vids[0]
                 var Max = Vids[1]
@@ -384,15 +378,15 @@ return new Promise(async resolve => {
         }
         } catch (err){
             console.log(`Erreur time speed ${err}`)
-            if(3 >= (await db.get(`w_${N}`))-(await db.get(`z_${N}`))) await db.set(`Speed_${N}`, (await db.get(`Speed_${N}`))- 0.01)
-            await db.set(`z_${N}`, (await db.get(`w_${N}`)))
+            if(3 >= w-z) Speed -= 0.01
+            z = w
         }
         try{
             if((await page.$x('//*[@id="__next"]/div/div[2]/div[2]/div/div/div[2]/div[2]/cnx/cnx/cnx[2]/cnx/cnx[3]/cnx[1]/cnx[1]/cnx[1]/cnx[2]/cnx/cnx-span')
             || (await page.$x('//*[@id="id_807c75746d6f426c82c1eaac3ffc46ea"]/cnx[7]/cnx[1]/cnx-span/cnx/cnx-span')) == (null || undefined))) {
-                if((await db.get(`y_page_${N}`)) == 12*10/Check_Time) await page.reload()
+                if(y.page == 12*10/Check_Time) await page.reload()
             }
-            else await db.set(`y_page_${N}`, (await db.get(`y_page_${N}`))+1)
+            else y.page++
         } catch {
             console.log("Erreur time video")
         }
@@ -405,7 +399,7 @@ return new Promise(async resolve => {
             .then(async() => await page.keyboard.press('Delete'))
             if(!(await page.url()).includes("https://loot.tv/video/")) return Close("Ne charges pas de vidéo")
             else {
-                if(N == 0) await db.set(`Time_${N}`,(await db.get(`Time_${N}`))+Check_Time)
+                if(N == 0) Time += Check_Time
                 setTimeout(() => Farm(),Check_Time*1000)
             }
         } catch (e){
@@ -418,16 +412,16 @@ return new Promise(async resolve => {
 }
 (async () => {
   var RES = require('path').resolve;
-  const Chromium = require('chromium')
+  const Chromium = require('chromium');
   await Chromium.install().then(async () => {
-var options = {headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox']}
+var options = {headless: true,executablePath: RES(Chromium.path), args: ['--no-sandbox', '--disable-setuid-sandbox']}
 if(Hidden == false) options.headless = false
 async function restart(n){await launch(n,(await puppeteer.launch(options))).then(() => restart(n))}
 for(var i = 0;i+Not_Work<Instances.length;i++){
     restart(i)
     await new Promise(async resolve => {
         async function Wait(){
-            if((await db.get(`w_${i}`)) !== 0) resolve()
+            if(w !== 0) resolve()
             else {
                 await sleep(1000)
                 Wait()
