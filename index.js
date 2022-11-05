@@ -146,7 +146,7 @@ async function launch(N,browser) {
     const LootTv = new Discord.Webhook(Webhook)
 return new Promise(async resolve => {
     const page = (await browser.pages())[0]
-    page.setDefaultTimeout(40000)
+    page.setDefaultTimeout(20000)
     async function Close(reason) {
         await browser.close()
         if(reason == "12min écoulées") f++
@@ -417,18 +417,6 @@ return new Promise(async resolve => {
 var options = {headless: true,executablePath: RES(Chromium.path), args: ['--no-sandbox', '--disable-setuid-sandbox']}
 if(Hidden == false) options.headless = false
 async function restart(n){await launch(n,(await puppeteer.launch(options))).then(() => restart(n))}
-for(var i = 0;i+Not_Work<Instances.length;i++){
-    restart(i)
-    await new Promise(async resolve => {
-        async function Wait(){
-            if(w !== 0) resolve()
-            else {
-                await sleep(1000)
-                Wait()
-            }
-        }
-        await Wait()
-    })
-}
+for(var i = 0;i+Not_Work<Instances.length;i++){restart(i)}
 })
 })()
