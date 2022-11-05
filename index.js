@@ -146,7 +146,7 @@ async function launch(N,browser) {
     const LootTv = new Discord.Webhook(Webhook)
 return new Promise(async resolve => {
     const page = (await browser.pages())[0]
-    page.setDefaultTimeout(20000)
+    page.setDefaultTimeout(40000)
     async function Close(reason) {
         await browser.close()
         if(reason == "12min écoulées") f++
