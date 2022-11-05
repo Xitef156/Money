@@ -1,9 +1,8 @@
 {
-    "Webhook_URL": "",
-    "Color": "",
+    "Color": "#00ff0a",
+    "Color_TV": "#300faa",
     "Def_Speed": 1,
     "Hidden": true,
-    "Check_Time": 10,
-    "First_Video": "",
+    "Check_Time": 2,
     "Instances_Don't_Work": 0
 }
