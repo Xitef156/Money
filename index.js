@@ -4,7 +4,7 @@ const Discord = require('discord-webhook-node')
 var Instances = [
   {
     "Mail": process.env.Mail,
-    "Password": process.env.password
+    "Password": process.env.Password
   }
 ]
 const Options = require('./config_LootTV.json')
@@ -270,8 +270,9 @@ return new Promise(async resolve => {
             })
             w += views
                     var s_time = Time
-                    Total.monthly.int.push((Reward) / ((s_time / 60) * 8 / 10000 * 60 * 24 *30.4375))
-                    Total.monthly.total = (Total.monthly.int.reduce((partialSum, a) => partialSum + a, 0)/(Total.monthly.int.length*(Active+1)))
+                    Total.monthly.int.push((Reward / (s_time / 60)) * 8 / 10000 * 60 * 24 * 30.4375)
+                    var Sum = 0;Total.monthly.int.forEach(a => Sum += a)
+                    Total.monthly.total = Sum/Total.monthly.int.length
                     if(reason.length == 1 && reason[0] == "à 1 Rewarded TV"){
                         Embed.setColor(Color_TV)
                         console.log(`Tu as gagné ${(Gain).toFixed(2)} pts grâce ${reason.join(" et ")} ! pour Instance : ${N} (Points totaux : ${Point})`)
@@ -399,7 +400,7 @@ return new Promise(async resolve => {
             .then(async() => await page.keyboard.press('Delete'))
             if(!(await page.url()).includes("https://loot.tv/video/")) return Close("Ne charges pas de vidéo")
             else {
-                Time += Check_Time
+                if(N == 0) Time += Check_Time
                 setTimeout(() => Farm(),Check_Time*1000)
             }
         } catch (e){
