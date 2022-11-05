@@ -2,8 +2,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npm run ins && npm run un && npm run ins && node index.js",
-    "un": "npm uninstall puppeteer && npm uninstall moment && npm uninstall npm-check-updates && npm uninstall discord-webhook-node && npm uninstall chromium",
-    "ins": "npm install puppeteer && npm install moment && npm install npm-check-updates && npm install discord-webhook-node && npm install chromium"
+    "un": "npm uninstall puppeteer && npm uninstall better-sqlite3 && npm uninstall quick.db && npm uninstall moment && npm uninstall npm-check-updates && npm uninstall discord-webhook-node && npm uninstall chromium",
+    "ins": "npm install puppeteer && npm install better-sqlite3 && npm install quick.db && npm install moment && npm install npm-check-updates && npm install discord-webhook-node && npm install chromium"
   },
   "repository": {
     "type": "git"
