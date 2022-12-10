@@ -1,7 +1,7 @@
 {
   "main": "index.js",
   "scripts": {
-    "start": "npm run ins && npm run un && npm run ins && node index.js",
+    "start": "npm install && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && dpkg-deb -xv google-chrome-stable_current_amd64.deb ./ && node index.js",
     "un": "npm uninstall puppeteer && npm uninstall moment && npm uninstall npm-check-updates && npm uninstall discord-webhook-node && npm uninstall chromium",
     "ins": "npm install puppeteer && npm install moment && npm install npm-check-updates && npm install discord-webhook-node && npm install chromium"
   },
