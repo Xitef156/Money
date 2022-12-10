@@ -1,8 +1,14 @@
 {
-    "Color": "#00ff0a",
-    "Color_TV": "#300faa",
+    "Color": "f0ff0a",
+    "Color_TV": "#3f0faa",
+    "Color_Daily": "#3f0faa",
     "Def_Speed": 1,
     "Hidden": true,
-    "Check_Time": 2,
-    "Instances_Don't_Work": 0
+    "Check_Time": 10,
+    "Instances_Don't_Work": 0,
+    "Max_Time_Video": 15,
+    "Max_Time_Reload": 5,
+    "Add_Speed": 0.01,
+    "Remove_Speed": 0.01,
+    "Video_to_Speed": 2
 }
