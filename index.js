@@ -17,7 +17,6 @@ const sleep = (ms) => {
 }
 const Chrome = "./opt/google/chrome/chrome"
 const Webhook_URL = process.env.Webhook_URL
-var Webhook_URL = Options.Webhook_URL
 const Def_Speed = Options.Def_Speed
 const Hidden = Options.Hidden
 var Check_Time = Options.Check_Time
