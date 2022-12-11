@@ -237,6 +237,7 @@ async function launch(N,browser) {
     const LootTv = new Discord.Webhook(Webhooks.get(N))
 return new Promise(async resolve => {
     const page = (await browser.pages())[0]
+    await page.setDefaultTimeout(40000)
     /**
      * 
      * @param {String} reason Raison
